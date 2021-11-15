@@ -2,9 +2,12 @@ function start() {
     const submitButton = document.querySelector("#submitButton");
     const userNameInput = document.querySelector("#exampleFormControlInput1");
     const noteInput = document.querySelector("#exampleFormControlTextarea1");
+    
 
     // let userNames = [];
     const userNames = new Map();
+
+  
 
     submitButton.addEventListener("click", (event) => {
 
