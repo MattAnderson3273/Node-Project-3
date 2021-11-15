@@ -6,25 +6,23 @@ function start() {
     // let userNames = [];
     const userNames = new Map();
 
-
-    // Open all of the text files for users and extract the notes from them.
-
-
-
-
-
     submitButton.addEventListener("click", (event) => {
-        // console.log(userNameInput.value);
-        // console.log(noteInput.value);
 
-        // userNames.push(userNameInput.value)
+        // Solution to fetch JSON data found here: https://stackoverflow.com/questions/29775797/fetch-post-json-data
+        fetch('http://localhost:5000/notes', {
+            method: 'POST',
+            //mode: 'no-cors',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Credentials': true
+            },
+            body: JSON.stringify({ username: userNameInput.value, note: noteInput.value })
+        })
+            .then((res) => { return res.json(); })
+            .then((data) => { alert(JSON.stringify(data)); });
 
-        userNames.set(userNameInput.value, noteInput.value);
-
-        console.log(userNames);
-
-        
-    
         event.preventDefault();
     });
 }

@@ -35,6 +35,8 @@ router.get('/', (req, res) => {
 // @desc    Show note and its contents
 // @access  Public
 router.post('/', (req, res) => { 
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Credentials', true);
     const { username, note } = req.body;  
     if(username && note) {
         try {
