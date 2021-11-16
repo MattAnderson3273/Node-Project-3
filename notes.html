@@ -7,8 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notes</title>
 
-    <script src="notepage.js"></script>
-
     <!-- Bootatrap styling -->
     <link rel="stylesheet" href="styles/bootstrap.min.css">
     <!-- Custom styling-->
@@ -51,22 +49,23 @@
 
     <!-- Bootstrap table -->
     <div class="table-content">
-        <table class="table table-striped">
+        <table class="table table-striped" id="table">
             <thead>
                 <tr>
-                    <th colspan="3" scope="col">Notes Authored By: Username here</th>
-                    <td><a href="#" class="btn btn-secondary btn-sm">Edit</a> <a href="#" class="btn btn-danger btn-sm">Delete</a></td>
+                    <th colspan="3" scope="col" id="note-author"></th> 
                 </tr>
             </thead>
-            <tbody>
-                <tr>
+            <tbody id="note-list">
+                <!-- <tr>
                     <th scope="row">1</th>
                     <td>Note content goes here.</td>
-                </tr>
+                    <td><a href="#" class="btn btn-secondary btn-sm">Edit</a> <a href="#" class="btn btn-danger btn-sm">Delete</a></td>
+                </tr> -->
             </tbody>
         </table>
     </div>
 
+    <script src="notepage.js"></script>
 </body>
 
 </html>

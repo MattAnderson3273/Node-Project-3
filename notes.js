@@ -6,8 +6,8 @@ const path = require('path');
 // @route   GET /notes
 // @desc    Get notes from text files
 // @access  Public
-router.get('/', (req, res) => {
-    const { username } = req.body; 
+router.get('/:username', (req, res) => {
+    const username  = req.params.username; 
     if(username) {
         try {
             fs.readFile(path.join(__dirname, '/usernames', `${username}.txt`), 'utf8', (error, data) => {
@@ -16,10 +16,10 @@ router.get('/', (req, res) => {
                     return;
                 } 
 
-                res.status(200).send({
-                   username: `${username}`,
-                   notes: data
-                });
+                const notesData = data.split('\n');
+                //notesData.pop(); 
+                console.log(notesData); 
+                res.send(notesData); 
             });
         } catch (err) {
             res.status(500).send('Server Error'); 

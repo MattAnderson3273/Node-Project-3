@@ -6,9 +6,7 @@ function start() {
 
     // let userNames = [];
     const userNames = new Map();
-
-  
-
+    
     submitButton.addEventListener("click", (event) => {
 
         // Solution to fetch JSON data found here: https://stackoverflow.com/questions/29775797/fetch-post-json-data

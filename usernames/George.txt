@@ -1,2 +1,5 @@
 George is a new person!
 George likes stuff.
+George has another note now! That's cool. 
+Let's add yet another note for George! Because why not.
+Hello!
