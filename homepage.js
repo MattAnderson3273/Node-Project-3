@@ -1,7 +1,7 @@
 function start() {
     const submitButton = document.querySelector("#submitButton");
     const userNameInput = document.querySelector("#exampleFormControlInput1");
-    const noteInput = document.querySelector("#exampleFormControlTextarea1");
+    const noteInput = document.querySelector("#exampleFormControlInput2");
     
 
     // let userNames = [];
@@ -24,6 +24,7 @@ function start() {
             .then((res) => { return res.json(); })
             .then((data) => { alert(JSON.stringify(data)); });
 
+        noteInput.value = ''; 
         event.preventDefault();
     });
 }

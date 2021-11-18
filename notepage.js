@@ -3,32 +3,9 @@ const userNameInput = document.querySelector("#exampleFormControlInput1");
 const table = document.querySelector("#table");
 const tableHead = document.querySelector("#note-author");
 const tableDataToAdd = document.querySelector("#note-list");
+const deleteButton = document.querySelector('#delete-button');
 
-// Remove me later after creating EDIT HTML Structures
-let userName1 = "Mary";
-let oldNote1 = "WAAAAAAAAA!";
-let newNote1 = "WAAAAAAAAAS";
-
-fetch(`http://localhost:5000/notes/${userName1}`, {
-	method: "PATCH",
-	headers: {
-		"Content-Type": "application/json",
-		"Access-Control-Allow-Origin": "*",
-		"Access-Control-Allow-Credentials": true,
-	},
-	body: JSON.stringify({
-		username: userName1,
-		oldNote: oldNote1,
-		newNote: newNote1,
-	}),
-})
-	.then((res) => {
-		return res.json();
-	})
-	.then((data) => {
-		alert(JSON.stringify(data));
-	});
-// Remove me later end
+let masterNote = ''; 
 
 notesButton.addEventListener("click", (event) => {
 	try {
@@ -58,18 +35,74 @@ notesButton.addEventListener("click", (event) => {
 	event.preventDefault();
 });
 
+tableDataToAdd.addEventListener("click", (event) => {
+
+	if (event.target.classList.contains('edit')) {
+ 
+		const oldNote = event.target.parentElement.parentElement.childNodes[3].textContent;
+		masterNote = oldNote; 
+		const noteTableColumn = event.target.parentElement.parentElement.childNodes[3];
+		noteTableColumn.innerHTML = `<form>
+    			<label for="new-note-form"></label>
+    			<input type="text" class="form-control" id="new-note-form">
+		</form>`;
+
+		event.target.parentElement.innerHTML = `
+			<button type="button" class="btn btn-primary btn-sm mb-3 confirm">Confirm</button>
+			<button type="button" class="btn btn-danger btn-sm mb-3 cancel">Cancel</button>
+		`;
+		const newNoteForm = document.querySelector('#new-note-form');
+		newNoteForm.value = oldNote;
+	}  
+	
+	if (event.target.classList.contains('confirm')) {
+		const newNote = document.querySelector('#new-note-form');
+		const noteTableColumn = event.target.parentElement.parentElement.childNodes[3];
+		noteTableColumn.innerHTML = newNote.value;
+		event.target.parentElement.innerHTML = `<a href="#" class="btn btn-secondary btn-sm edit">Edit</a>`;
+
+		fetch(`http://localhost:5000/notes/${userNameInput.value}`, {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
+				'Accept': 'application/json',
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Credentials": true,
+			},
+			body: JSON.stringify({
+				username: userNameInput.value,
+				oldNote: masterNote,
+				newNote: newNote.value
+			}),
+		})
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				alert(JSON.stringify(data));
+			});
+	}
+	
+	if (event.target.classList.contains('cancel')) {
+		const noteTableColumn = event.target.parentElement.parentElement.childNodes[3];
+		noteTableColumn.innerHTML = masterNote; 
+		event.target.parentElement.innerHTML = `<a href="#" class="btn btn-secondary btn-sm edit">Edit</a>`; 
+
+	}
+});
+
 function addTableRow(note, username, number) {
 	const row = document.createElement("tr");
+
 	row.innerHTML = `
         <td>${number}</td>
-        <td>${note}</td>
-        <td><a href="#" class="btn btn-secondary btn-sm">Edit</a> <a href="#" class="btn btn-danger btn-sm">Delete</a></td>
+        <td class="note">${note}</td>
+        <td><a href="#" class="btn btn-secondary btn-sm edit">Edit</a></td>
+		<td><input class="form-check-input me-1" type="checkbox" aria-label="..." id="checkbox"></td>
     `;
 
+	deleteButton.style.visibility = 'visible';
 	tableHead.innerHTML = `Notes Authored By: ${username}`;
 	tableDataToAdd.appendChild(row);
 }
 
-tableDataToAdd.addEventListener("click", (event) => {
-	console.log(event.target);
-});

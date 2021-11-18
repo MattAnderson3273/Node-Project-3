@@ -1,50 +1,50 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 // @route   GET /notes/:username
 // @desc    Get notes from text files
 // @access  Public
-router.get("/:username", (req, res) => {
+router.get('/:username', (req, res) => {
     const username = req.params.username;
     if (username) {
         try {
             fs.readFile(
-                path.join(__dirname, "/usernames", `${username}.txt`),
-                "utf8",
+                path.join(__dirname, '/usernames', `${username}.txt`),
+                'utf8',
                 (error, data) => {
                     if (error) {
                         res.status(404).send({ msg: `No notes for ${username} found.` });
                         return;
                     }
 
-                    const notesData = data.split("\n");
+                    const notesData = data.split('\n');
                     notesData.pop();
                     console.log(notesData);
                     res.send(notesData);
                 }
             );
         } catch (err) {
-            res.status(500).send("Server Error");
+            res.status(500).send('Server Error');
             console.error(err.message);
         }
     } else {
-        res.status(404).send({ msg: "Please provide a username" });
+        res.status(404).send({ msg: 'Please provide a username' });
     }
 });
 
 // @route   POST /notes
 // @desc    Show note and its contents
 // @access  Public
-router.post("/", (req, res) => {
-    //res.header("Access-Control-Allow-Origin", "*");
-    //res.header("Access-Control-Allow-Credentials", true);
+router.post('/', (req, res) => {
+    //res.header('Access-Control-Allow-Origin', '*');
+    //res.header('Access-Control-Allow-Credentials', true);
     const { username, note } = req.body;
     if (username && note) {
         try {
             fs.appendFile(
-                path.join(__dirname, "/usernames", `${username}.txt`),
+                path.join(__dirname, '/usernames', `${username}.txt`),
                 `${note}\n`,
                 (error) => {
                     if (error) throw error;
@@ -52,28 +52,28 @@ router.post("/", (req, res) => {
                 }
             );
         } catch (err) {
-            res.status(500).send("Server Error");
+            res.status(500).send('Server Error');
             console.error(err.message);
         }
     } else {
-        res.status(404).send({ msg: "Please provide a username and a note" });
+        res.status(404).send({ msg: 'Please provide a username and a note' });
     }
 });
 
 // @route   PATCH /notes/:username
 // @desc    Get notes from text files, replace note that needs to be edited
 // @access  Public
-router.patch("/:username", (req, res) => {
-    //res.header("Access-Control-Allow-Origin", "*");
-    //res.header("Access-Control-Allow-Credentials", true);
+router.patch('/:username', (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Credentials', true);
     const { username, oldNote, newNote } = req.body;
     let newFileContent = '';
 
     if (username && oldNote && newNote) {
         try {
             fs.readFile(
-                path.join(__dirname, "/usernames", `${username}.txt`),
-                "utf8",
+                path.join(__dirname, '/usernames', `${username}.txt`),
+                'utf8',
                 (error, data) => {
                     if (error) {
                         res.status(404).send({ msg: `No notes for ${username} found.` });
@@ -92,28 +92,27 @@ router.patch("/:username", (req, res) => {
             );
 
         } catch (err) {
-            res.status(500).send("Server Error");
+            res.status(500).send('Server Error');
             console.error(err.message);
         }
     } else {
-        res.status(404).send({ msg: "Please provide a username" });
+        res.status(404).send({ msg: 'Please provide a username' });
     }
 });
 
 // @route   DELETE /notes/:username
 // @desc    Delete a note from the file
 // @access  Public
-router.delete("/:username", (req, res) => {
+router.delete('/:username', (req, res) => {
     const username = req.params.username; 
-    const notesFromDOM = req.body.notes;
-    //console.log(notesFromDOM); 
+    const notesFromDOM = req.body.notes; 
     let newFileContent = ''; 
     
     if (username && notesFromDOM) {
         try {
             fs.readFile(
-                path.join(__dirname, "/usernames", `${username}.txt`),
-                "utf8",
+                path.join(__dirname, '/usernames', `${username}.txt`),
+                'utf8',
                 (error, data) => { 
 
                     if (error) {
@@ -121,7 +120,7 @@ router.delete("/:username", (req, res) => {
                         return;
                     }
 
-                    const notesData = data.split("\n");
+                    const notesData = data.split('\n');
                     notesData.pop();
 
                     newFileContent = notesData.filter(note => {
@@ -134,33 +133,22 @@ router.delete("/:username", (req, res) => {
 
                         if(!equal) return note; 
                     });
-                    console.log(newFileContent); 
-
-                    // notesFromDOM.forEach(note => {
-                    //     if(data.includes(note)) {
-                    //         newFileContent = data.replace(note, ''); 
-                    //     }
-                    // });
-
-
                     res.send(newFileContent); 
                     writeArrayToFile(newFileContent, username);
                 }
             );
-
-
         } catch (err) {
-            res.status(500).send("Server Error");
+            res.status(500).send('Server Error');
             console.error(err.message);
         }
     }
     else {
-        res.status(404).send({ msg: "Please provide a username and/or notes to delete" });
+        res.status(404).send({ msg: 'Please provide a username and/or notes to delete' });
     }
 });
 
 function writeArrayToFile(array, username) {
-    const file = fs.createWriteStream(path.join(__dirname, "/usernames", `${username}.txt`)); 
+    const file = fs.createWriteStream(path.join(__dirname, '/usernames', `${username}.txt`)); 
     file.on('error', err => {
         console.error(err.message); 
     });
@@ -174,7 +162,7 @@ function writeArrayToFile(array, username) {
 function writeToFile(content, username) {
     //console.log(content);
     fs.writeFile(
-        path.join(__dirname, "/usernames", `${username}.txt`),
+        path.join(__dirname, '/usernames', `${username}.txt`),
         `${content}`,
         (error) => {
             if (error) throw error;

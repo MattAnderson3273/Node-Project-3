@@ -19,8 +19,23 @@ h1 {
     padding: 3px;
 }
 
+#delete-button {
+    visibility: hidden;
+}
+
+#checkbox {
+    padding-left: 10px;
+}
+
+.table-items {
+    display: grid;
+}
+
 .table-content {
     margin: 30px 10px 5px 10px;
     background-color: white;
-    width: 60vw;
+    width: 60vw; 
+    word-wrap: break-word;
 }
+
+
