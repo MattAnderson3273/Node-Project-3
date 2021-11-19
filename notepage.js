@@ -3,9 +3,9 @@ const userNameInput = document.querySelector("#exampleFormControlInput1");
 const table = document.querySelector("#table");
 const tableHead = document.querySelector("#note-author");
 const tableDataToAdd = document.querySelector("#note-list");
-const deleteButton = document.querySelector('#delete-button');
+const deleteButton = document.querySelector("#delete-button");
 
-let masterNote = ''; 
+let masterNote = "";
 
 notesButton.addEventListener("click", (event) => {
 	try {
@@ -35,13 +35,15 @@ notesButton.addEventListener("click", (event) => {
 	event.preventDefault();
 });
 
+// Add event listener from the body of
+// some html as it has rows dynamically added to it
 tableDataToAdd.addEventListener("click", (event) => {
-
-	if (event.target.classList.contains('edit')) {
- 
-		const oldNote = event.target.parentElement.parentElement.childNodes[3].textContent;
-		masterNote = oldNote; 
-		const noteTableColumn = event.target.parentElement.parentElement.childNodes[3];
+	if (event.target.classList.contains("edit")) {
+		const oldNote =
+			event.target.parentElement.parentElement.childNodes[3].textContent;
+		masterNote = oldNote;
+		const noteTableColumn =
+			event.target.parentElement.parentElement.childNodes[3];
 		noteTableColumn.innerHTML = `<form>
     			<label for="new-note-form"></label>
     			<input type="text" class="form-control" id="new-note-form">
@@ -51,13 +53,14 @@ tableDataToAdd.addEventListener("click", (event) => {
 			<button type="button" class="btn btn-primary btn-sm mb-3 confirm">Confirm</button>
 			<button type="button" class="btn btn-danger btn-sm mb-3 cancel">Cancel</button>
 		`;
-		const newNoteForm = document.querySelector('#new-note-form');
+		const newNoteForm = document.querySelector("#new-note-form");
 		newNoteForm.value = oldNote;
-	}  
-	
-	if (event.target.classList.contains('confirm')) {
-		const newNote = document.querySelector('#new-note-form');
-		const noteTableColumn = event.target.parentElement.parentElement.childNodes[3];
+	}
+
+	if (event.target.classList.contains("confirm")) {
+		const newNote = document.querySelector("#new-note-form");
+		const noteTableColumn =
+			event.target.parentElement.parentElement.childNodes[3];
 		noteTableColumn.innerHTML = newNote.value;
 		event.target.parentElement.innerHTML = `<a href="#" class="btn btn-secondary btn-sm edit">Edit</a>`;
 
@@ -65,14 +68,14 @@ tableDataToAdd.addEventListener("click", (event) => {
 			method: "PATCH",
 			headers: {
 				"Content-Type": "application/json",
-				'Accept': 'application/json',
+				Accept: "application/json",
 				"Access-Control-Allow-Origin": "*",
 				"Access-Control-Allow-Credentials": true,
 			},
 			body: JSON.stringify({
 				username: userNameInput.value,
 				oldNote: masterNote,
-				newNote: newNote.value
+				newNote: newNote.value,
 			}),
 		})
 			.then((res) => {
@@ -82,13 +85,58 @@ tableDataToAdd.addEventListener("click", (event) => {
 				alert(JSON.stringify(data));
 			});
 	}
-	
-	if (event.target.classList.contains('cancel')) {
-		const noteTableColumn = event.target.parentElement.parentElement.childNodes[3];
-		noteTableColumn.innerHTML = masterNote; 
-		event.target.parentElement.innerHTML = `<a href="#" class="btn btn-secondary btn-sm edit">Edit</a>`; 
 
+	if (event.target.classList.contains("cancel")) {
+		const noteTableColumn =
+			event.target.parentElement.parentElement.childNodes[3];
+		noteTableColumn.innerHTML = masterNote;
+		event.target.parentElement.innerHTML = `<a href="#" class="btn btn-secondary btn-sm edit">Edit</a>`;
 	}
+
+	// Manually check the checkbox, since its not working automatically
+	if (event.target.type == "checkbox") {
+		let checkStatus = event.target.getAttribute("checked");
+		event.target.prop("checked", !checkStatus);
+	}
+
+	if (event.target.classList) event.preventDefault();
+});
+
+deleteButton.addEventListener("click", (event) => {
+	// Returns all checked box objects of the name "deleteBox"
+	var checkboxes = document.querySelectorAll(
+		'input[name="' + "deleteBox" + '"]:checked'
+	);
+
+	let notesToDelete = [];
+
+	// Loop through all the checkboxes to get the note text within an aunt/uncle element
+	for (const element of checkboxes) {
+		console.log(element.parentElement.parentElement.childNodes[3].innerHTML);
+
+		notesToDelete.push(
+			element.parentElement.parentElement.childNodes[3].innerHTML
+		);
+	}
+
+	fetch(`http://localhost:5000/notes/${userNameInput.value}`, {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+			"Access-Control-Allow-Origin": "*",
+			"Access-Control-Allow-Credentials": true,
+		},
+		body: JSON.stringify({
+			notes: notesToDelete,
+		}),
+	})
+		.then((res) => {
+			return res.json();
+		})
+		.then((data) => {
+			alert(JSON.stringify(data));
+		});
 });
 
 function addTableRow(note, username, number) {
@@ -98,11 +146,10 @@ function addTableRow(note, username, number) {
         <td>${number}</td>
         <td class="note">${note}</td>
         <td><a href="#" class="btn btn-secondary btn-sm edit">Edit</a></td>
-		<td><input class="form-check-input me-1" type="checkbox" aria-label="..." id="checkbox"></td>
+		<td><input name="deleteBox" class="form-check-input me-1" type="checkbox" aria-label="..." id="checkbox" ></td>
     `;
 
-	deleteButton.style.visibility = 'visible';
+	deleteButton.style.visibility = "visible";
 	tableHead.innerHTML = `Notes Authored By: ${username}`;
 	tableDataToAdd.appendChild(row);
 }
-
