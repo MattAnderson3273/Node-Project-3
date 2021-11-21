@@ -1,3 +1,4 @@
+// Entry point for the server. All server requests are located in the notes.js file. 
 const express = require('express'); 
 const cors = require('cors'); 
 

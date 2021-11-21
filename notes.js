@@ -1,3 +1,8 @@
+/**
+ * Contains all of the requests for http://localhost:5000/notes. Includes a GET, POST, PATCH and DELETE request. Each request performs 
+ * reading and writing to the specified file and updates it as necessary.   
+ */
+
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
@@ -38,8 +43,6 @@ router.get('/:username', (req, res) => {
 // @desc    Show note and its contents
 // @access  Public
 router.post('/', (req, res) => {
-    //res.header('Access-Control-Allow-Origin', '*');
-    //res.header('Access-Control-Allow-Credentials', true);
     const { username, note } = req.body;
     if (username && note) {
         try {
@@ -119,7 +122,6 @@ router.delete('/:username', (req, res) => {
                         res.status(404).send({ msg: `No notes for ${username} found.` });
                         return;
                     }
-
                     const notesData = data.split('\n');
                     notesData.pop();
 
@@ -147,6 +149,7 @@ router.delete('/:username', (req, res) => {
     }
 });
 
+// used to write a whole array to the text file
 function writeArrayToFile(array, username) {
     const file = fs.createWriteStream(path.join(__dirname, '/usernames', `${username}.txt`)); 
     file.on('error', err => {
@@ -158,9 +161,8 @@ function writeArrayToFile(array, username) {
     file.end(); 
 }
 
-// Function call used to make sure async problems don't occur
+// used to write a string to the text file
 function writeToFile(content, username) {
-    //console.log(content);
     fs.writeFile(
         path.join(__dirname, '/usernames', `${username}.txt`),
         `${content}`,
