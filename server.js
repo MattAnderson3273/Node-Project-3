@@ -4,9 +4,6 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5000; 
 
-
-//Zach was here and pushed
-
 // JSON Body Parser
 app.use(express.json()); 
 

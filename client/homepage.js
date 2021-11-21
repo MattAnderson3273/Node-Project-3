@@ -3,15 +3,10 @@ function start() {
 	const userNameInput = document.querySelector("#exampleFormControlInput1");
 	const noteInput = document.querySelector("#exampleFormControlInput2");
 
-	// let userNames = [];
-	const userNames = new Map();
-
 	submitButton.addEventListener("click", (event) => {
-		event.preventDefault();
-		// Solution to fetch JSON data found here: https://stackoverflow.com/questions/29775797/fetch-post-json-data
+		//event.preventDefault();
 		fetch("http://localhost:5000/notes", {
 			method: "POST",
-			//mode: 'no-cors',
 			headers: {
 				Accept: "application/json",
 				"Content-Type": "application/json",
@@ -27,7 +22,7 @@ function start() {
 				return res.json();
 			})
 			.then((data) => {
-				alert(JSON.stringify(data));
+				alert(JSON.stringify(data)); // may need fixing 
 			});
 
 		noteInput.value = "";

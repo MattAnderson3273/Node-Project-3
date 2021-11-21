@@ -27,11 +27,12 @@ notesButton.addEventListener("click", (event) => {
 	})
 		.then((res) => res.json())
 		.then((json) => {
+			console.log(json); 
 			json.forEach((note, index) =>
 				addTableRow(note, userNameInput.value, index + 1)
 			);
 		})
-		.catch((error) => console.error(error.message));
+		.catch((error) => alert('Please provide a username.'));
 	event.preventDefault();
 });
 
@@ -83,7 +84,7 @@ tableDataToAdd.addEventListener("click", (event) => {
 			})
 			.then((data) => {
 				alert(JSON.stringify(data));
-			});
+			})
 	}
 
 	if (event.target.classList.contains("cancel")) {
@@ -94,8 +95,8 @@ tableDataToAdd.addEventListener("click", (event) => {
 	}
 
 	// Manually check the checkbox, since its not working automatically
-	if (event.target.type == "checkbox") {
-		let checkStatus = event.target.getAttribute("checked");
+	if (event.target.type === "checkbox") {
+		let checkStatus = event.target.getAttribute("checked"); 
 		event.target.prop("checked", !checkStatus);
 	}
 
@@ -103,20 +104,24 @@ tableDataToAdd.addEventListener("click", (event) => {
 });
 
 deleteButton.addEventListener("click", (event) => {
+	
 	// Returns all checked box objects of the name "deleteBox"
 	var checkboxes = document.querySelectorAll(
-		'input[name="' + "deleteBox" + '"]:checked'
+		'input[name="' + "deleteBox" + '"]'
 	);
 
 	let notesToDelete = [];
 
 	// Loop through all the checkboxes to get the note text within an aunt/uncle element
 	for (const element of checkboxes) {
-		console.log(element.parentElement.parentElement.childNodes[3].innerHTML);
 
-		notesToDelete.push(
-			element.parentElement.parentElement.childNodes[3].innerHTML
-		);
+		if (element.checked) {
+			notesToDelete.push(
+				element.parentElement.parentElement.childNodes[3].innerHTML
+			);
+		}
+		//console.log(element.parentElement.parentElement.childNodes[3].innerHTML);
+		element.parentElement.parentElement.remove(); 
 	}
 
 	fetch(`http://localhost:5000/notes/${userNameInput.value}`, {
@@ -135,7 +140,9 @@ deleteButton.addEventListener("click", (event) => {
 			return res.json();
 		})
 		.then((data) => {
-			alert(JSON.stringify(data));
+			data.forEach((note, index) =>
+				addTableRow(note, userNameInput.value, index + 1)
+			);
 		});
 });
 
@@ -146,7 +153,7 @@ function addTableRow(note, username, number) {
         <td>${number}</td>
         <td class="note">${note}</td>
         <td><a href="#" class="btn btn-secondary btn-sm edit">Edit</a></td>
-		<td><input name="deleteBox" class="form-check-input me-1" type="checkbox" aria-label="..." id="checkbox" ></td>
+		<td><input name="deleteBox" class="form-check-input me-1" type="checkbox" aria-label="..." id="checkbox"></td>
     `;
 
 	deleteButton.style.visibility = "visible";

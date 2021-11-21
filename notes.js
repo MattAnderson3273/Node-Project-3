@@ -48,7 +48,7 @@ router.post('/', (req, res) => {
                 `${note}\n`,
                 (error) => {
                     if (error) throw error;
-                    res.status(200).send({ msg: `${username}.txt has been written to!` });
+                    res.status(200).send({ msg: 'Message submitted.' });
                 }
             );
         } catch (err) {
@@ -56,7 +56,7 @@ router.post('/', (req, res) => {
             console.error(err.message);
         }
     } else {
-        res.status(404).send({ msg: 'Please provide a username and a note' });
+        res.status(404).send({ msg: 'Please provide a username/note' });
     }
 });
 
